@@ -14,8 +14,13 @@ root.render(
           Button: {
             colorPrimary: "#2C3333",
             colorPrimaryHover: "#2C3333",
-            borderRadius: "0px",
+            borderRadius: "2px",
+            boxShadow: "none",
           },
+        },
+        token: {
+          borderRadius: "2px",
+          colorPrimary: "#2C3333",
         },
       }}
     >
