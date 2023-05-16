@@ -33,14 +33,31 @@ function ProtectedPage({ children }) {
   }, []);
 
   return (
-    <div>
-      {user && (
-        <div className="p-5">
-          {user.name}
-          {children}
+    user && (
+      <div>
+        {/* header section */}
+        <div className="flex justify-between items-center bg-primary p-5">
+          <h1 className="text-2xl text-white">OLDUCT</h1>
+
+          <div className="bg-white py-2 px-5 rounded flex gap-1 items-center">
+            <i className="ri-shield-user-line"></i>
+            <span className="underline cursor-pointer uppercase">
+              {user.name}
+            </span>
+            <i
+              className="ri-logout-box-r-line ml-7"
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/login");
+              }}
+            ></i>
+          </div>
         </div>
-      )}
-    </div>
+
+        {/* body section */}
+        <div className="p-5">{children}</div>
+      </div>
+    )
   );
 }
 
