@@ -3,6 +3,8 @@ import { Button, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import Divider from "../../components/Divider";
 import { LoginUser } from "../../api/users";
+import { useDispatch } from "react-redux";
+import { SetLoading } from "../../redux/loadersSlice";
 
 const rules = [
   {
@@ -13,10 +15,13 @@ const rules = [
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onFinish = async (values) => {
     try {
+      dispatch(SetLoading(true));
       const response = await LoginUser(values);
+      dispatch(SetLoading(false));
       if (response.success) {
         message.success(response.message);
         localStorage.setItem("token", response.data);
@@ -25,6 +30,7 @@ function Login() {
         throw new Error(response.message);
       }
     } catch (error) {
+      dispatch(SetLoading(false));
       message.error(error.message);
     }
   };
