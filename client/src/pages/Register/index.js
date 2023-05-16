@@ -1,9 +1,10 @@
-import React from "react";
-import { Button, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Button, Form, Input, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import Divider from "../../components/Divider";
+import { RegisterUser } from "../../api/users";
 
-const rules =[
+const rules = [
   {
     required: true,
     message: "Required",
@@ -11,9 +12,26 @@ const rules =[
 ];
 
 function Register() {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const navigate = useNavigate();
+  
+  const onFinish = async (values) => {
+    try {
+      const response = await RegisterUser(values);
+      if (response.success) {
+        message.success(response.message);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="h-screen flex bg-primary justify-center items-center">
