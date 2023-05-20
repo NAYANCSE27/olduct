@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect } from "react";
 import { AddProduct, EditProduct } from "../../../api/products";
 import { SetLoading } from "../../../redux/loadersSlice";
+import Images from "./Images";
 
 const additionalThings = [
   {
@@ -38,6 +39,7 @@ function ProductsForm({
   selectedProduct,
   getData,
 }) {
+  const [selectedTab = "1", setSelectedTab] = React.useState("1");
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
   const onFinish = async (values) => {
@@ -82,12 +84,17 @@ function ProductsForm({
       width={1000}
       okText="Save"
       onOk={() => formRef.current.submit()}
+      {...(selectedTab === "2" && { footer: false })}
     >
       <div>
         <h1 className="text-primary text-2xl text-center font-semibold uppercase">
           {selectedProduct ? "Edit Product" : "Add Product"}
         </h1>
-        <Tabs defaultActiveKey="1">
+        <Tabs
+          defaultActiveKey="1"
+          activeKey={selectedTab}
+          onChange={(key) => setSelectedTab(key)}
+        >
           <items tab="General" key="1">
             <Form layout="vertical" ref={formRef} onFinish={onFinish}>
               <Form.Item label="Name" name="name" rules={rules}>
@@ -148,8 +155,12 @@ function ProductsForm({
               </div>
             </Form>
           </items>
-          <items tab="Images" key="2">
-            <h1>Images</h1>
+          <items tab="Images" key="2" disabled={!selectedProduct}>
+            <Images
+              selectedProduct={selectedProduct}
+              setShowProductForm={setShowProductForm}
+              getData={getData}
+            />
           </items>
         </Tabs>
       </div>
