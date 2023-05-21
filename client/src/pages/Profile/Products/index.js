@@ -1,7 +1,7 @@
 import { Button, Table, message } from "antd";
 import React, { useEffect } from "react";
 import ProductsForm from "./ProductsForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SetLoading } from "../../../redux/loadersSlice";
 import { DeleteProduct, GetProducts } from "../../../api/products";
 import moment from "moment";
@@ -10,12 +10,13 @@ function Products() {
   const [selectedProduct, setSelectedProduct] = React.useState(null);
   const [products, setProducts] = React.useState([]);
   const [showProductForm, setShowProductForm] = React.useState(false);
+  const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   const getData = async () => {
     try {
       dispatch(SetLoading(true));
-      const response = await GetProducts();
+      const response = await GetProducts({ seller: user._id });
 
       dispatch(SetLoading(false));
       if (response.success) {
@@ -66,7 +67,7 @@ function Products() {
       dataIndex: "age",
     },
     {
-      title: "status",
+      title: "Status",
       dataIndex: "status",
     },
     {
