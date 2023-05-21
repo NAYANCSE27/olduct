@@ -2,7 +2,7 @@ import { Button, Upload, message } from "antd";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { SetLoading } from "../../../redux/loadersSlice";
-import { UploadProductImage } from "../../../api/products";
+import { EditProduct, UploadProductImage } from "../../../api/products";
 import { set } from "mongoose";
 
 function Images({ selectedProduct, setShowProductForm, getData }) {
@@ -35,8 +35,42 @@ function Images({ selectedProduct, setShowProductForm, getData }) {
     }
   };
 
+  const deleteImage = async (image) => {
+    try {
+      const updatedImagesArray = images.filter((img) => img !== image);
+      const updatedProduct = { ...selectedProduct, images: updatedImagesArray };
+      const response = await EditProduct(selectedProduct._id, updatedProduct);
+      
+      if (response.success) {
+        message.success(response.message);
+        setImages(updatedImagesArray);
+        getData();
+      } else {
+        throw new Error(response.message);
+      }
+      dispatch(SetLoading(true));
+
+    } catch (error) {
+      dispatch(SetLoading(false));
+      message.error(error.message);
+    }
+  };
+
   return (
     <div>
+      <div className="flex gap-5 mb-3">
+        {images.map((image) => {
+          return (
+            <div className="flex gap-2 border border-solid border-gray-300 rounded p-3 items-end">
+              <img src={image} alt="" className="w-20 h-20 object-cover" />
+              <i
+                className="ri-delete-bin-5-line"
+                onClick={() => deleteImage(image)}
+              ></i>
+            </div>
+          );
+        })}
+      </div>
       <Upload
         listType="picture"
         beforeUpload={() => false}
@@ -46,16 +80,6 @@ function Images({ selectedProduct, setShowProductForm, getData }) {
         }}
         showUploadList={showPreview}
       >
-        <div className="flex gap-5 mb-3">
-          {images.map((image) => {
-            return (
-              <div className="flex gap-2 border border-solid border-gray-300 rounded p-3 items-end">
-                <img src={image} alt="" className="w-20 h-20 object-cover" />
-                <i className="ri-delete-bin-5-line" onClick={() => {}}></i>
-              </div>
-            );
-          })}
-        </div>
         <Button type="dashed">Upload Images</Button>
       </Upload>
 
