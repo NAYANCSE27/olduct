@@ -50,7 +50,7 @@ function ProductsForm({
         response = await EditProduct(selectedProduct._id, values);
       } else {
         values.seller = user._id;
-        values.status = "pedning";
+        values.status = "pending";
         response = await AddProduct(values);
       }
       dispatch(SetLoading(false));
