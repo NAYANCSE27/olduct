@@ -34,7 +34,23 @@ router.post("/get-products", async (req, res) => {
       .sort({ createdAt: -1 });
     res.send({
       success: true,
-      products,
+      data: products,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+// Get a product by id
+router.get("/get-product-by-id/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).populate("seller");
+    res.send({
+      success: true,
+      data: product,
     });
   } catch (error) {
     res.send({
