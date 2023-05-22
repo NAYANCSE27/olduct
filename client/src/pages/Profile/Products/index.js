@@ -20,7 +20,7 @@ function Products() {
 
       dispatch(SetLoading(false));
       if (response.success) {
-        setProducts(response.products);
+        setProducts(response.data);
       }
     } catch (error) {
       dispatch(SetLoading(false));
