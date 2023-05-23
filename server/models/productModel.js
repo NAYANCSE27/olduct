@@ -46,6 +46,10 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    showBidsOnProductPage: {
+      type: Boolean,
+      default: false,
+    },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
@@ -60,4 +64,4 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("products", productSchema); 
+module.exports = mongoose.model("products", productSchema);

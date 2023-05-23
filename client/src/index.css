@@ -11,13 +11,17 @@
   font-size: 15px;
 }
 
-input, select, textarea{
+input,
+select,
+textarea {
   min-height: 47px !important;
   border: 1px solid #e7f2f6 !important;
-  width: 100% !important;
+  width: 100%;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none !important;
   border: 1px solid #a5c9ca !important;
   box-shadow: none !important;
@@ -28,11 +32,11 @@ button {
   box-shadow: none !important;
 }
 
-table{
+table {
   border: #a1a1a1 1px solid !important;
   border-radius: 2px;
 }
 
-i{
+i {
   font-size: 20px !important;
 }
