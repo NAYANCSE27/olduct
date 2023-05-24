@@ -6,11 +6,15 @@ import { SetLoading } from "../../redux/loadersSlice";
 import { message } from "antd";
 import Divider from "../../components/Divider";
 import { useNavigate } from "react-router-dom";
+import Filters from "./Filters";
 
 function Home() {
+  const [showFilters, setShowFilters] = useState(true);
   const [products, setProducts] = useState([]);
-  const [filter, setFilter] = useState({
+  const [filters, setFilters] = useState({
     status: "approved",
+    category: [],
+    age: [],
   });
 
   const navigate = useNavigate();
@@ -19,7 +23,7 @@ function Home() {
   const getData = async () => {
     try {
       dispatch(SetLoading(true));
-      const response = await GetProducts(filter);
+      const response = await GetProducts(filters);
       dispatch(SetLoading(false));
       if (response.success) {
         setProducts(response.data);
@@ -30,38 +34,69 @@ function Home() {
     }
   };
 
-  React.useEffect(() => {
+  // React.useEffect(() => {
+  //   getData();
+  // }, []);
+
+  useEffect(() => {
     getData();
-  }, []);
+  }, [filters]);
 
   return (
-    <div>
-      <div className="grid grid-cols-5 gap-2">
-        {products?.map((product) => {
-          return (
-            <div
-              className="border border-gray-300 rounded border-solid flex flex-col gap-5 pb-2 cursor-pointer"
-              key={product._id}
-              onClick={() => {
-                navigate(`/product/${product._id}`);
-              }}
-            >
-              <img
-                src={product.images[0]}
-                className="w-full h-40 object-cover"
-                alt=""
-              />
-              <div className="px-2 flex flex-col gap-1">
-                <h1 className="text-lg font-semibold">{product.name}</h1>
-                <p className="text-sm">{product.description}</p>
-                <Divider />
-                <span className="text-lg text-xl font-semibold text-green-700">
-                  $ {product.price}
-                </span>
+    <div className="flex gap-5">
+      {showFilters && (
+        <Filters
+          showFilters={showFilters}
+          setShowFilters={setShowFilters}
+          filters={filters}
+          setFilters={setFilters}
+        />
+      )}
+      <div className="flex flex-col gap-5 w-full">
+        <div className="flex gap-5 items-center">
+          {!showFilters && (
+            <i
+              className="ri-equalizer-line text-xl cursor-pointer"
+              onClick={() => setShowFilters(!showFilters)}
+            ></i>
+          )}
+          <input
+            type="text"
+            placeholder="Search Products here...."
+            className="border border-gray-500 rounded border-solid h-14 px-2 w-full"
+          />
+        </div>
+        <div
+          className={`grid gap-5 ${
+            showFilters ? "grid-cols-4" : "grid-cols-5"
+          }`}
+        >
+          {products?.map((product) => {
+            return (
+              <div
+                className="border border-gray-500 rounded border-solid flex flex-col gap-2 pb-2 cursor-pointer"
+                key={product._id}
+                onClick={() => {
+                  navigate(`/product/${product._id}`);
+                }}
+              >
+                <img
+                  src={product.images[0]}
+                  className="w-full h-52 p-2 rounded-md"
+                  alt=""
+                />
+                <div className="px-2 flex flex-col gap-1">
+                  <h1 className="text-lg font-semibold">{product.name}</h1>
+                  <p className="text-sm">{product.description}</p>
+                  <Divider />
+                  <span className="text-lg text-xl font-semibold text-green-700">
+                    $ {product.price}
+                  </span>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
