@@ -40,3 +40,7 @@ table {
 i {
   font-size: 20px !important;
 }
+
+.max-width {
+  max-width: max-content !important;
+}
