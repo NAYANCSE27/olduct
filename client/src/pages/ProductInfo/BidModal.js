@@ -3,9 +3,10 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SetLoading } from "../../redux/loadersSlice";
 import { PlaceNewBid } from "../../api/products";
+import { AddNotification } from "../../api/notifications";
 
 function BidModal({ showBidModal, setShowBidModal, product, reloadData }) {
-  const {user} = useSelector((state) => state.users);
+  const { user } = useSelector((state) => state.users);
   const formRef = React.useRef();
   const rules = [{ required: true, message: "Required" }];
   const dispatch = useDispatch();
@@ -22,9 +23,19 @@ function BidModal({ showBidModal, setShowBidModal, product, reloadData }) {
       dispatch(SetLoading(false));
       if (response.success) {
         message.success(response.message);
+
+        // send notification to seller
+        await AddNotification({
+          title: "A new bid has been placed",
+          message: `${user.name} has placed a bid of ${values.bidAmount} on your product ${product.title}`,
+          user: product.seller._id,
+          onClick: `/profile`,
+          read: false,
+        });
+
         reloadData();
         setShowBidModal(false);
-      }else{
+      } else {
         throw new Error(response.message);
       }
     } catch (error) {

@@ -16,10 +16,11 @@ router.post("/place-new-bid", authMiddleware, async (req, res) => {
 // get all bids
 router.post("/get-all-bids", authMiddleware, async (req, res) => {
   try {
-    const { product, seller } = req.query;
+    const { product, seller, buyer} = req.query;
     let filters = {};
     if (product) filters.product = product;
     if (seller) filters.seller = seller;
+    if (user) filters.buyer = buyer;
 
     const bids = await Bid.find(filters)
       .populate("product")
